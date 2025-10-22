@@ -39,6 +39,7 @@ There's one more way. Just run `tests-e2e.sh` file (Won't work on windows)
 - Note: You might need to make the script executable first: `chmod +x tests-e2e.sh`
 
 There's also integration tests running on this project for individual services. So any commits to the `main` branch will test both the services out
+- You can run this yourself !!! Head over to github actions tab.
 
 ## How is all this working ?
 ![alt text](kvStore.png)
