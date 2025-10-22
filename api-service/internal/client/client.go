@@ -71,3 +71,6 @@ func (c *KVStoreClient) Delete(key string) error {
 	})
 	return err
 }
+
+// Ensure KVStoreClient implements ClientInterface
+var _ ClientInterface = (*KVStoreClient)(nil)

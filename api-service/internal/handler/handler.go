@@ -13,10 +13,10 @@ import (
 )
 
 type Handler struct {
-	grpcClient *client.KVStoreClient
+	grpcClient client.ClientInterface
 }
 
-func NewHandler(grpcClient *client.KVStoreClient) *Handler {
+func NewHandler(grpcClient client.ClientInterface) *Handler {
 	return &Handler{
 		grpcClient: grpcClient,
 	}
