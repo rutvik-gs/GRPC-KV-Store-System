@@ -2,6 +2,8 @@ package test
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"testing"
 	"time"
 
@@ -10,11 +12,53 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 
+	"GRPC-KV-Store-System/kvStore-service/internal/server"
+	"GRPC-KV-Store-System/kvStore-service/internal/store"
 	pb "GRPC-KV-Store-System/schemas"
 )
 
+var (
+	testPort = 50052
+)
+
+func setupTestServer(t *testing.T) (*grpc.Server, func()) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", testPort))
+	if err != nil {
+		t.Fatalf("Failed to listen: %v", err)
+	}
+
+	grpcServer := grpc.NewServer()
+
+	kvStore := store.CreateStore()
+	kvServer := server.StartServer(kvStore)
+	pb.RegisterKeyValueStoreServer(grpcServer, kvServer)
+
+	go func() {
+		if err := grpcServer.Serve(lis); err != nil {
+			t.Logf("Server error: %v", err)
+		}
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+
+	cleanup := func() {
+		grpcServer.GracefulStop()
+	}
+
+	t.Logf("Server Started successfully at %d!!!", testPort)
+
+	return grpcServer, cleanup
+}
+
 func TestKVStoreIntegration(t *testing.T) {
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	_, cleanup := setupTestServer(t)
+	defer cleanup()
+
+	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", testPort), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+	defer conn.Close()
 
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
