@@ -16,7 +16,7 @@ type Handler struct {
 	grpcClient client.ClientInterface
 }
 
-func NewHandler(grpcClient client.ClientInterface) *Handler {
+func StartHandler(grpcClient client.ClientInterface) *Handler {
 	return &Handler{
 		grpcClient: grpcClient,
 	}
@@ -139,12 +139,6 @@ func (h *Handler) handleGRPCError(w http.ResponseWriter, err error) {
 		httpStatus = http.StatusNotFound
 	case codes.InvalidArgument:
 		httpStatus = http.StatusBadRequest
-	case codes.AlreadyExists:
-		httpStatus = http.StatusConflict
-	case codes.PermissionDenied:
-		httpStatus = http.StatusForbidden
-	case codes.Unauthenticated:
-		httpStatus = http.StatusUnauthorized
 	default:
 		httpStatus = http.StatusInternalServerError
 	}

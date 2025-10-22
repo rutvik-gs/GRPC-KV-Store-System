@@ -1,0 +1,34 @@
+# Ignore Git
+.git
+.gitignore
+
+# Ignore CI/CD
+.github
+
+# Ignore documentation
+*.md
+README.md
+
+# Ignore test files
+*_test.go
+test/
+tests/
+
+# Ignore local development files
+.env
+.vscode
+.idea
+
+# Ignore build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+kvstore-server
+api-server
+
+# Ignore Postman files (optional - include if you want them in image)
+postman/
+
+# Ignore Go build cache
+vendor/

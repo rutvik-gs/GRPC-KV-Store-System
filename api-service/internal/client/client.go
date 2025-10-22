@@ -17,9 +17,8 @@ type KVStoreClient struct {
 	conn   *grpc.ClientConn
 }
 
-func NewKVStoreClient(grpcServerAddr string) (*KVStoreClient, error) {
-	conn, err := grpc.NewClient(grpcServerAddr,
-		grpc.WithTransportCredentials(insecure.NewCredentials()))
+func StartClient(grpcServerAddr string) (*KVStoreClient, error) {
+	conn, err := grpc.NewClient(grpcServerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to gRPC server: %v", err)
 	}
@@ -45,6 +44,7 @@ func (c *KVStoreClient) Set(key, value string) error {
 		Key:   key,
 		Value: value,
 	})
+
 	return err
 }
 
@@ -69,6 +69,7 @@ func (c *KVStoreClient) Delete(key string) error {
 	_, err := c.client.Delete(ctx, &pb.DeleteRequest{
 		Key: key,
 	})
+
 	return err
 }
 

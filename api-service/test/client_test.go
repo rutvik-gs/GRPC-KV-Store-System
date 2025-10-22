@@ -14,7 +14,7 @@ import (
 
 func setupRouter() *mux.Router {
 	mockClient := NewMockClient()
-	h := handler.NewHandler(mockClient)
+	h := handler.StartHandler(mockClient)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/health", h.HealthHandler).Methods("GET")
@@ -44,7 +44,7 @@ func TestHealthEndpoint(t *testing.T) {
 		t.Errorf("Expected healthy status, got %s", response["status"])
 	}
 
-	t.Log("✓ Health check passed")
+	t.Log("Health check passed")
 }
 
 func TestSetAndGetFlow(t *testing.T) {
@@ -63,7 +63,7 @@ func TestSetAndGetFlow(t *testing.T) {
 			t.Errorf("Expected status 201, got %d", rr.Code)
 		}
 
-		t.Log("✓ Set successful")
+		t.Log("Set successful")
 	})
 
 	// Test Get
@@ -84,7 +84,7 @@ func TestSetAndGetFlow(t *testing.T) {
 			t.Errorf("Expected 'alice', got '%s'", response["value"])
 		}
 
-		t.Log("✓ Get successful")
+		t.Log("Get successful")
 	})
 }
 
@@ -107,7 +107,7 @@ func TestGetNonExistentKey(t *testing.T) {
 		t.Errorf("Expected 'key not found', got '%s'", response["error"])
 	}
 
-	t.Log("✓ Not found handled correctly")
+	t.Log("Not found handled correctly")
 }
 
 func TestDeleteFlow(t *testing.T) {
@@ -131,7 +131,7 @@ func TestDeleteFlow(t *testing.T) {
 			t.Errorf("Expected status 200, got %d", rr.Code)
 		}
 
-		t.Log("✓ Delete successful")
+		t.Log("Delete successful")
 	})
 
 	// Verify it's deleted
@@ -145,7 +145,7 @@ func TestDeleteFlow(t *testing.T) {
 			t.Errorf("Expected status 404 after delete, got %d", rr.Code)
 		}
 
-		t.Log("✓ Key successfully deleted")
+		t.Log("Key successfully deleted")
 	})
 }
 
@@ -161,7 +161,7 @@ func TestDeleteNonExistentKey(t *testing.T) {
 		t.Errorf("Expected status 404, got %d", rr.Code)
 	}
 
-	t.Log("✓ Delete non-existent key handled correctly")
+	t.Log("Delete non-existent key handled correctly")
 }
 
 func TestInvalidJSON(t *testing.T) {
@@ -178,7 +178,7 @@ func TestInvalidJSON(t *testing.T) {
 		t.Errorf("Expected status 400, got %d", rr.Code)
 	}
 
-	t.Log("✓ Invalid JSON rejected")
+	t.Log("Invalid JSON rejected")
 }
 
 func TestEmptyKey(t *testing.T) {
@@ -195,7 +195,7 @@ func TestEmptyKey(t *testing.T) {
 		t.Errorf("Expected status 400, got %d", rr.Code)
 	}
 
-	t.Log("✓ Empty key rejected")
+	t.Log("Empty key rejected")
 }
 
 func TestMultipleOperations(t *testing.T) {
@@ -243,5 +243,5 @@ func TestMultipleOperations(t *testing.T) {
 		}
 	}
 
-	t.Log("✓ Multiple operations successful")
+	t.Log("Multiple operations successful")
 }

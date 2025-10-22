@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  System-Test:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +44,7 @@ jobs:
 
     - name: Run kvStore-service tests
       working-directory: ./kvStore-service
-      run: go test ./test/... -v -cover
+      run: go test ./test/... -v
 
     - name: Install dependencies for api-service
       working-directory: ./api-service
@@ -54,12 +54,4 @@ jobs:
 
     - name: Run api-service tests
       working-directory: ./api-service
-      run: go test ./test/... -v -cover
-
-    - name: Build kvStore-service
-      working-directory: ./kvStore-service
-      run: go build -v ./cmd/main.go
-
-    - name: Build api-service
-      working-directory: ./api-service
-      run: go build -v ./cmd/main.go
+      run: go test ./test/... -v

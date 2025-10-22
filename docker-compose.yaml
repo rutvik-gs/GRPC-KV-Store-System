@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  kvstore-service:
+    build:
+      context: .
+      dockerfile: kvStore-service/Dockerfile
+    container_name: kvstore-service
+    networks:
+      - kv-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50051"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api-service:
+    build:
+      context: .
+      dockerfile: api-service/Dockerfile
+    container_name: api-service
+    ports:
+      - "8080:8080"  # Only this port is exposed to the host
+    environment:
+      - GRPC_SERVER_ENDPOINT=kvstore-service:50051
+    depends_on:
+      - kvstore-service
+    networks:
+      - kv-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  kv-network:
+    driver: bridge

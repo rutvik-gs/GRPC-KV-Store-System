@@ -22,7 +22,9 @@ func (m *MockClient) Set(key, value string) error {
 	if key == "" {
 		return status.Error(codes.InvalidArgument, "key cannot be empty")
 	}
+
 	m.store[key] = value
+
 	return nil
 }
 
@@ -49,6 +51,7 @@ func (m *MockClient) Delete(key string) error {
 	}
 
 	delete(m.store, key)
+
 	return nil
 }
 

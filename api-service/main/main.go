@@ -31,18 +31,19 @@ func main() {
 
 	log.Println("Starting REST API server...")
 
-	grpcClient, err := client.NewKVStoreClient(*grpcServerAddr)
+	grpcClient, err := client.StartClient(*grpcServerAddr)
 	if err != nil {
 		log.Fatalf("Failed to create gRPC client: %v", err)
 	}
+
 	defer grpcClient.Close()
 
-	validator, err := middleware.NewValidationMiddleware(*specPath)
+	validator, err := middleware.StartValidator(*specPath)
 	if err != nil {
 		log.Fatalf("Failed to load OpenAPI spec: %v", err)
 	}
 
-	h := handler.NewHandler(grpcClient)
+	h := handler.StartHandler(grpcClient)
 
 	router := mux.NewRouter()
 

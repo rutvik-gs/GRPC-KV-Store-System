@@ -16,9 +16,10 @@ type ValidationMiddleware struct {
 	router routers.Router
 }
 
-func NewValidationMiddleware(specPath string) (*ValidationMiddleware, error) {
+func StartValidator(specPath string) (*ValidationMiddleware, error) {
 	loader := openapi3.NewLoader()
 	doc, err := loader.LoadFromFile(specPath)
+
 	if err != nil {
 		return nil, err
 	}
@@ -42,6 +43,7 @@ func NewValidationMiddleware(specPath string) (*ValidationMiddleware, error) {
 func (m *ValidationMiddleware) Validate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		route, pathParams, err := m.router.FindRoute(r)
+
 		if err != nil {
 			next.ServeHTTP(w, r)
 			return
