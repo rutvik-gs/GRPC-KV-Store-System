@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package kvstore;
 
-option go_package = "github.com/rutvik-gs/GRPC-KV-Store-System/schemas/kvStoreService";
+option go_package = "github.com/rutvik-gs/GRPC-KV-Store-System/schemas/grpc/kvStoreService";
 
 service KeyValueStore {
   rpc Set(SetRequest) returns (SetResponse);

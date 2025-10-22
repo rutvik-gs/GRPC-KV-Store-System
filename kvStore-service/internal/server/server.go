@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"GRPC-KV-Store-System/kvStore-service/internal/store"
-	pb "GRPC-KV-Store-System/schemas"
+	pb "GRPC-KV-Store-System/schemas/grpc"
 )
 
 type Server struct {

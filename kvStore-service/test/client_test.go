@@ -14,7 +14,7 @@ import (
 
 	"GRPC-KV-Store-System/kvStore-service/internal/server"
 	"GRPC-KV-Store-System/kvStore-service/internal/store"
-	pb "GRPC-KV-Store-System/schemas"
+	pb "GRPC-KV-Store-System/schemas/grpc"
 )
 
 var (

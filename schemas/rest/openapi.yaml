@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Key-Value Store API
+  description: REST API for distributed key-value store with gRPC backend
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      operationId: getHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /kv:
+    post:
+      summary: Store a key-value pair
+      operationId: setKeyValue
+      tags:
+        - Key-Value Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetRequest'
+      responses:
+        '201':
+          description: Key-value pair stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /kv/{key}:
+    get:
+      summary: Retrieve a value by key
+      operationId: getKeyValue
+      tags:
+        - Key-Value Operations
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: The key to retrieve
+      responses:
+        '200':
+          description: Value retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponse'
+        '404':
+          description: Key not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Delete a key
+      operationId: deleteKey
+      tags:
+        - Key-Value Operations
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: The key to delete
+      responses:
+        '200':
+          description: Key deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: Key not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    SetRequest:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+          description: The key to store
+          minLength: 1
+          maxLength: 256
+          example: "username"
+          pattern: '^[a-zA-Z0-9:_.-]+$'
+        value:
+          type: string
+          description: The value to store
+          maxLength: 10000
+          example: "alice"
+
+    GetResponse:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+          example: "username"
+        value:
+          type: string
+          example: "alice"
+
+    SuccessResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Key-value pair stored successfully"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "Key not found"
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          example: "healthy"
