@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.33.0
-// source: schemas/kvStoreService.proto
+// source: schemas/grpc/kvStoreService.proto
 
 package kvStoreService
 
@@ -193,5 +193,5 @@ var KeyValueStore_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "schemas/kvStoreService.proto",
+	Metadata: "schemas/grpc/kvStoreService.proto",
 }

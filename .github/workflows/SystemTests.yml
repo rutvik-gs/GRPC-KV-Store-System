@@ -1,4 +1,4 @@
-name: gRPC Tests
+name: System Tests
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
         export PATH=$PATH:$(go env GOPATH)/bin
         protoc --go_out=. --go_opt=paths=source_relative \
                --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-               schemas/kvStoreService.proto
+               schemas/grpc/kvStoreService.proto
 
     - name: Install dependencies for kvStore-service
       working-directory: ./kvStore-service
@@ -42,13 +42,24 @@ jobs:
         go mod download
         go mod tidy
 
-    - name: Run tests
+    - name: Run kvStore-service tests
       working-directory: ./kvStore-service
-      run: go test ./test/... -v
+      run: go test ./test/... -v -cover
 
-    - name: Stop gRPC server
-      if: always()
+    - name: Install dependencies for api-service
+      working-directory: ./api-service
       run: |
-        if [ -f /tmp/grpc_server.pid ]; then
-          kill $(cat /tmp/grpc_server.pid) || true
-        fi
+        go mod download
+        go mod tidy
+
+    - name: Run api-service tests
+      working-directory: ./api-service
+      run: go test ./test/... -v -cover
+
+    - name: Build kvStore-service
+      working-directory: ./kvStore-service
+      run: go build -v ./cmd/main.go
+
+    - name: Build api-service
+      working-directory: ./api-service
+      run: go build -v ./cmd/main.go
