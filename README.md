@@ -4,6 +4,8 @@
 
 A simple GRPC server that exposes basic CRUD operations on a key-value store using a REST API server
 
+P.S. This is my first time writing in Go, and I built the entire project with it. So pardon me if I didn't use best coding practices here.
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
@@ -16,10 +18,16 @@ A simple GRPC server that exposes basic CRUD operations on a key-value store usi
 - Make sure you got docker and docker compose
 
 ## How to start the server ?
+- Clone the repo
+- Make sure docker is running
 - Build the images by running
     - `docker-compose build`
-- Now just start the services. That's it !!!
+- Now just start the services.
     - `docker-compose up -d`
+- That's it !!! You can check the open-api spec of the rest apis at http://localhost:8080/openapi.yaml
+
+### Run individual server manually ?
+- Follow along the [Workflows File!](.github/workflows/SystemTests.yml)
 
 ## Testing
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/gatechrutvik/rutvik-s-workspace/collection/kmnh7sf/kv-store-api-complete-test-suite?action=share&creator=38345624)
@@ -65,4 +73,4 @@ GRPC-KV-Store-System/
 ├── README.md                     # Project documentation
 ```
 
-The docker build process pulls api schemas from the schemas folder. It's a central folder (ideally a separate repo entirely) which both services use. This way both have access to a single source of truth regarding api contracts. While gRPC seamlessly integrates the use of protobuf, I used a validator middle ware for api-service (It helps me validate requests and responses).
+The docker build process pulls api schemas from the schemas folder. It's a central folder (ideally it should be a separate repo entirely) which both services use. This way both have access to a single source of truth regarding api contracts. While gRPC seamlessly integrates the use of protobuf with itself and its consumers, I had to use a validator middleware for api-service. This helps me validate requests and responses.
